@@ -18,7 +18,7 @@
     <string name="app_name">TwitterPOC</string>
     <string name="post_subtitle">Submitted by %s</string>
     <string name="retry">Retry</string>
-    <string name="db_plus_network">generte token</string>
+    <string name="db_plus_network">generate token</string>
     <string name="default_searchquery">ipl2018</string>
     <string name="search_hint">Hashtag</string>
 </resources>

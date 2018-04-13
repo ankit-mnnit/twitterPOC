@@ -21,6 +21,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Base64
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import com.android.example.twitterPoc.twitter.ServiceLocator
 import com.android.example.twitterPoc.twitter.repository.ApiConstants
 import com.android.example.twitterPoc.twitter.repository.TwitterTweetRepository
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
             null -> {
                 withDatabase.setOnClickListener {
+                    it.isEnabled = false
                     show(TwitterTweetRepository.Type.DB)
                 }
             }
@@ -60,10 +63,12 @@ class MainActivity : AppCompatActivity() {
 
         getAuthToken()
 
-
     }
 
     private fun getAuthToken() {
+
+        progressBar.visibility = View.VISIBLE
+        progressBar.isIndeterminate = true
 
         ServiceLocator.instance(this)
                 .getTwitterApi()
@@ -77,6 +82,9 @@ class MainActivity : AppCompatActivity() {
                      */
                     override fun onFailure(call: Call<TwitterTokenType>?, t: Throwable?) {
                         Log.e("Twitter", "Login Failure ${t!!.message}")
+                        Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_SHORT).show()
+                        progressBar.visibility = View.GONE
+                        withDatabase.isEnabled = true
                     }
 
                     /**
@@ -87,6 +95,7 @@ class MainActivity : AppCompatActivity() {
                      * Call [Response.isSuccessful] to determine if the response indicates success.
                      */
                     override fun onResponse(call: Call<TwitterTokenType>?, response: Response<TwitterTokenType>?) {
+                        progressBar.visibility = View.GONE
                         Log.d("Twitter", "Login success ${response!!.body()!!.access_token}")
                         val preferenceHelper = PreferenceHelper
                         val sharedPreferences = preferenceHelper.customPrefs(this@MainActivity, "twitterpoc")
